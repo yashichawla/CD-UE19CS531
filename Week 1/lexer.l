@@ -16,9 +16,17 @@ polarity [-+]?
 fraction  (\.{digit}+)?
 exponent ([Ee][+-]{digit}+)?
 number {polarity}?{digit}+{fraction}{exponent}
-id {letter}({letter}|{digit})*
-
+id {letter}{alnumspecial}*
+%x state
 %%
+
+^("//").*     ;
+\/\* {yymore(); BEGIN state;}
+<state>[' '|\t] {yymore(); BEGIN state;}
+<state>[\n] {yymore(); ++yylineno; BEGIN state;}
+<state>[^\*] {yymore(); BEGIN state;}
+<state>"*"[^/] {yymore(); BEGIN state;}
+<state>"*"\/ BEGIN 0 ;
 
 int return INT;
 float return FLOAT;

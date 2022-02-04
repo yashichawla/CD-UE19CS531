@@ -1,2 +1,5 @@
 #include <stdio.h>
-int c;
+void main()
+{
+    int c;
+}

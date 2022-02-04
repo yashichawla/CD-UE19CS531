@@ -41,13 +41,18 @@ extern char *yytext;
 
 %%
 
-S : Program { printf("Valid Declaration\n");YYACCEPT; }
+// S : Program { printf("Valid Declarations\n");YYACCEPT; }
+S : Program { YYACCEPT; }
   ;
 
 Program : INCLUDE '<' HEADER '>' Program
   | Declaration ';' Program
+  | MainFunction Program
+  | Assignment ';' Program
+  // | error { yyerrok; }
   | 
   ;
+
 Declaration : TYPE ListOfDeclarations 
   ;
 
@@ -55,10 +60,76 @@ TYPE : INT
      | FLOAT
      | CHAR
      | DOUBLE
+     | VOID
      ;
 
 ListOfDeclarations : ListOfDeclarations ',' ID
   | ID
+  ;
+
+Assignment : ID '=' Expression
+  ;
+
+Expression : Expression RelationalOperator E
+  | E
+  ;
+
+RelationalOperator : '<'
+  | '>'
+  | OPERATOR_GREATER_EQUAL
+  | OPERATOR_LESS_EQUAL
+  | OPERATOR_EQUAL
+  | OPERATOR_NOT_EQUAL
+  ;
+
+E : E '+' T
+  | E '-' T
+  | T
+  ;
+
+T : T '*' F
+  | T '/' F
+  | T '%' F
+  | F
+  ;
+
+F : '(' Expression ')'
+  | ID
+  | NUMBER
+  ;
+
+MainFunction : TYPE MAIN '(' EmptyListOfDeclarations ')' '{' Statement '}'
+  ;
+
+EmptyListOfDeclarations : ListOfDeclarations
+  |
+  ;
+
+Statement : SingleStatement Statement
+  | Block Statement
+  |
+  ;
+
+SingleStatement : Declaration ';'
+  | Assignment ';'
+  | IF '(' Condition ')' Statement
+  | IF '(' Condition ')' Statement ELSE Statement
+  | WhileLoop
+  | error { yyerrok; yyclearin; }
+  ;
+
+Block : '{' Statement '}'
+  ;
+
+WhileLoop : WHILE '(' Condition ')' WhileLoopBody
+  ;
+
+Condition : Expression
+  | Assignment
+  ;
+
+WhileLoopBody : '{' Statement '}'
+  |
   ;
 
 %%
@@ -66,7 +137,7 @@ ListOfDeclarations : ListOfDeclarations ',' ID
 void yyerror(char *line)
 {
   printf("Error near token %s on line %d: %s\n", yytext, yylinenumber+1, line);
-  exit(0);
+  // exit(0);
 }
 
 int main()
