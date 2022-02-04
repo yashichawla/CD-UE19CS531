@@ -24,14 +24,14 @@ void yyerror(char *s);
 %token HEADER
 %%
 
-// S : Program {printf("Valid Declaration\n");YYACCEPT;}
-//   ;
-
-Program : INCLUDE '<'HEADER'>' Program {printf("Valid Declaration\n");YYACCEPT;}
-  | Declaration ';' Program {printf("Valid Declaration\n");YYACCEPT;}
+S : Program NEWLINE {printf("Valid Declaration\n");YYACCEPT;}
   ;
 
-Declaration : TYPE ListOfDeclarations
+Program : INCLUDE '<' HEADER '>' Program
+  |Declaration ';' Program
+  | 
+  ;
+Declaration : TYPE ListOfDeclarations 
   ;
 
 TYPE : INT
