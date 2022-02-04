@@ -3,6 +3,8 @@
 # include <stdlib.h>
 int yylex();
 void yyerror(char *s);
+extern int yylinenumber;
+extern char *yytext;
 %}
 
 %token INT
@@ -18,17 +20,32 @@ void yyerror(char *s);
 %token CONTINUE
 %token INCLUDE
 %token MAIN
-%token ID
-%token NEWLINE
-%token NUMBER
+%token RETURN
+%token VOID
+%token OPERATOR_INCREMENT
+%token OPERATOR_DECREMENT
+%token OPERATOR_GREATER_EQUAL
+%token OPERATOR_LESS_EQUAL
+%token OPERATOR_EQUAL
+%token OPERATOR_NOT_EQUAL
+%token OPERATOR_AND
+%token OPERATOR_OR
+%token OPERATOR_PLUS_EQUAL
+%token OPERATOR_MINUS_EQUAL
+%token OPERATOR_MULTIPLY_EQUAL
+%token OPERATOR_DIVIDE_EQUAL
+%token OPERATOR_MODULUS_EQUAL
 %token HEADER
+%token ID
+%token NUMBER
+
 %%
 
-S : Program NEWLINE {printf("Valid Declaration\n");YYACCEPT;}
+S : Program { printf("Valid Declaration\n");YYACCEPT; }
   ;
 
 Program : INCLUDE '<' HEADER '>' Program
-  |Declaration ';' Program
+  | Declaration ';' Program
   | 
   ;
 Declaration : TYPE ListOfDeclarations 
@@ -46,8 +63,9 @@ ListOfDeclarations : ListOfDeclarations ',' ID
 
 %%
 
-void yyerror(char *s) {
-  printf("%s\n", s);
+void yyerror(char *line)
+{
+  printf("Error near token %s on line %d: %s\n", yytext, yylinenumber+1, line);
   exit(0);
 }
 
@@ -56,6 +74,6 @@ int main()
     if (!yyparse())
         printf("Parsing successful!\n");
     else
-        printf("Parsing Failed.\n");
+        printf("Parsing Failed :(\n");
     return 0;
 }

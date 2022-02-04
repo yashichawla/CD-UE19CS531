@@ -1,26 +1,4 @@
-%{
-#include <stdio.h>
-#include "y.tab.h"
-void yyerror(char *s);
-int yylinenumber;
-%}
-
-digit [0-9]
-letter [a-zA-Z]
-letterspecial [a-zA-Z_]
-alnum [a-zA-Z0-9]
-alnumspecial [a-zA-Z0-9_]
-whitespace [ \t\r]
-
-polarity [-+]?
-fraction  (\.{digit}+)?
-exponent ([Ee][+-]{digit}+)?
-number {polarity}?{digit}+{fraction}{exponent}
-id {letter}({letter}|{digit})*
-
-%%
-
-int return INT;
+tokens = '''int return INT;
 float return FLOAT;
 char return CHAR;
 double return DOUBLE;
@@ -56,5 +34,10 @@ void return VOID;
 {id}* return ID;
 {number} return NUMBER;
 . return *yytext;
+'''.strip().split('\n')
 
-%%
+tokens = list(map(lambda x: x.strip().split(), tokens))
+for t in tokens:
+    if t:
+        print(f'%token {t[-1][:-1]}')
+
