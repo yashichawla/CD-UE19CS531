@@ -117,6 +117,7 @@ SingleStatement : Declaration ';'
   | IF '(' Condition ')' Statement ELSE Statement
   | WhileLoop
   | error { yyerrok; yyclearin; }
+  | ';' // how to handle null statements?
   ;
 
 Block : '{' Statement '}'

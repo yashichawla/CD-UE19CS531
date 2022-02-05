@@ -838,7 +838,7 @@ case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
 #line 24 "lexer.l"
-;
+{ ++yylinenumber; };
 	YY_BREAK
 case 3:
 YY_RULE_SETUP

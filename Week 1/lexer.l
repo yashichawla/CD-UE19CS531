@@ -21,7 +21,7 @@ id {letter}{alnumspecial}*
 %%
 
 \/\/(.*) ;
-"/*"([^*]|\*+[^*/])*\*+"/" ;
+"/*"([^*]|\*+[^*/])*\*+"/" { ++yylinenumber; };
 
 int return INT;
 float return FLOAT;
