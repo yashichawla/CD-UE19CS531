@@ -34,7 +34,7 @@ int main()
 				a_3 = 3323 == 2665 + 297 > 5816;
 				int a_4;
 				a_4 = 6423 + 3661 * 1998;
-																//while block not closed
+															//while block not closed------ADD { TO AVOID infintie loop
 		}
 	}
 }

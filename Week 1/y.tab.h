@@ -79,7 +79,8 @@ extern int yydebug;
     OPERATOR_MODULUS_EQUAL = 285,
     HEADER = 286,
     ID = 287,
-    NUMBER = 288
+    NUMBER = 288,
+    STRING = 289
   };
 #endif
 /* Tokens.  */
@@ -114,6 +115,7 @@ extern int yydebug;
 #define HEADER 286
 #define ID 287
 #define NUMBER 288
+#define STRING 289
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED

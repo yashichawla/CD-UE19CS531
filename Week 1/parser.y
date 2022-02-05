@@ -38,6 +38,7 @@ extern char *yytext;
 %token HEADER
 %token ID
 %token NUMBER
+%token STRING
 
 %%
 
@@ -49,7 +50,6 @@ Program : INCLUDE '<' HEADER '>' Program
   | Declaration ';' Program
   | MainFunction Program
   | Assignment ';' Program
-  // | error { yyerrok; }
   | 
   ;
 
@@ -96,6 +96,7 @@ T : T '*' F
 F : '(' Expression ')'
   | ID
   | NUMBER
+  | STRING
   ;
 
 MainFunction : TYPE MAIN '(' EmptyListOfDeclarations ')' '{' Statement '}'

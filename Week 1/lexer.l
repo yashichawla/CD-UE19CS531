@@ -20,13 +20,8 @@ id {letter}{alnumspecial}*
 %x state
 %%
 
-^("//").*     ;
-\/\* {yymore(); BEGIN state;}
-<state>[' '|\t] {yymore(); BEGIN state;}
-<state>[\n] {yymore(); ++yylineno; BEGIN state;}
-<state>[^\*] {yymore(); BEGIN state;}
-<state>"*"[^/] {yymore(); BEGIN state;}
-<state>"*"\/ BEGIN 0 ;
+\/\/(.*) ;
+"/*"([^*]|\*+[^*/])*\*+"/" ;
 
 int return INT;
 float return FLOAT;
@@ -63,6 +58,7 @@ void return VOID;
 {letter}{alnumspecial}*\.h return HEADER;
 {id}* return ID;
 {number} return NUMBER;
+"'".*"'" return STRING;
 . return *yytext;
 
 %%
