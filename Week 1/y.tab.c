@@ -66,7 +66,7 @@
 
 
 /* First part of user prologue.  */
-#line 1 "parser.y"
+#line 1 "yacc.y"
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -1436,13 +1436,13 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 46 "parser.y"
+#line 46 "yacc.y"
             { YYACCEPT; }
 #line 1442 "y.tab.c"
     break;
 
   case 47:
-#line 119 "parser.y"
+#line 119 "yacc.y"
           { yyerrok; yyclearin; }
 #line 1448 "y.tab.c"
     break;
@@ -1680,7 +1680,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 137 "parser.y"
+#line 137 "yacc.y"
 
 
 void yyerror(char *line)
@@ -1692,8 +1692,8 @@ void yyerror(char *line)
 int main()
 {
     if (!yyparse())
-        printf("Parsing successful!\n");
+        printf("Parsing successful \n");
     else
-        printf("Parsing Failed :(\n");
+        printf("Parsing Failed \n");
     return 0;
 }

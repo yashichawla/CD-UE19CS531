@@ -145,8 +145,8 @@ void yyerror(char *line)
 int main()
 {
     if (!yyparse())
-        printf("Parsing successful!\n");
+        printf("Parsing successful \n");
     else
-        printf("Parsing Failed :(\n");
+        printf("Parsing Failed \n");
     return 0;
 }
