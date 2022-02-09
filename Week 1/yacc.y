@@ -138,7 +138,8 @@ WhileLoopBody : '{' Statement '}'
 
 void yyerror(char *line)
 {
-  printf("Error near token %s on line %d: %s\n", yytext, yylinenumber+1, line);
+  // printf("Error near token %s on line %d: %s\n", yytext, yylinenumber+1, line);
+  printf("Error: %s, line number: %d, token: %s\n", line, yylinenumber, yytext);
   // exit(0);
 }
 
