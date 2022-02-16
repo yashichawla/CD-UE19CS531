@@ -50,7 +50,6 @@ Program : INCLUDE '<' HEADER '>' Program
   | Declaration ';' Program
   | MainFunction Program
   | Assignment ';' Program
-  | Initialisation ';' Program
   | Expression ';' Program
   |
   ;
@@ -66,13 +65,12 @@ TYPE : INT
      ;
 
 ListOfDeclarations : ListOfDeclarations ',' ID
+  | ListOfDeclarations ',' Assignment
   | ID
+  | Assignment
   ;
 
 Assignment : ID '=' Expression
-  ;
-
-Initialisation : TYPE ListOfDeclarations '=' Expression
   ;
 
 
@@ -123,7 +121,6 @@ Statement : SingleStatement Statement
 
 SingleStatement : Declaration ';'
   | Assignment ';'
-  | Initialisation ';'
   | IF '(' Condition ')' Statement
   | IF '(' Condition ')' Statement ELSE Statement
   | WhileLoop
@@ -141,7 +138,6 @@ WhileLoop : WHILE '(' Condition ')' WhileLoopBody
 
 Condition : Expression
   | Assignment
-  | Initialisation
   ;
 
 WhileLoopBody : '{' Statement '}'
@@ -149,7 +145,7 @@ WhileLoopBody : '{' Statement '}'
   ;
 
 ForLoopInitialisation : Assignment
-  | Initialisation
+  | Declaration 
   |
   ;
 
@@ -158,7 +154,6 @@ ForLoopCondition : Condition
   ;
 
 ForLoopUpdate : Expression
-  | Assignment
   |
   ;
 
