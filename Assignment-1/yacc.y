@@ -57,6 +57,10 @@ Program : INCLUDE '<' HEADER '>' Program
 Declaration : TYPE ListOfDeclarations 
   ;
 
+Indexing : '[' Expression ']' Indexing
+  |
+  ;
+
 TYPE : INT
      | FLOAT
      | CHAR
@@ -64,13 +68,13 @@ TYPE : INT
      | VOID
      ;
 
-ListOfDeclarations : ListOfDeclarations ',' ID
+ListOfDeclarations : ListOfDeclarations ',' ID Indexing
   | ListOfDeclarations ',' Assignment
-  | ID
+  | ID Indexing
   | Assignment
   ;
 
-Assignment : ID '=' Expression
+Assignment : ID Indexing '=' Expression
   ;
 
 
