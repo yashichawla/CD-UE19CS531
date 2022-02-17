@@ -106,7 +106,7 @@ F : F OPERATOR_DECREMENT
   | OPERATOR_DECREMENT F
   | OPERATOR_INCREMENT F 
   | '(' Expression ')'
-  | ID
+  | ID Indexing
   | NUMBER
   | STRING
   ;
@@ -167,6 +167,9 @@ ForLoop : FOR '(' ForLoopInitialisation ';' ForLoopCondition ';' ForLoopUpdate '
 ForLoopBody : '{' Statement '}'
   |
   ;
+
+
+
 
 %%
 
