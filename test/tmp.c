@@ -1,6 +1,5 @@
 #include <stdio.h>
 void main()
 {
-    int a = 1;
-    int i = -(a && a || (a && !true));
+    int a = 1 / 2 / 3
 }

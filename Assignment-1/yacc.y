@@ -183,9 +183,6 @@ ForLoopBody : '{' Statement '}'
 DoWhileLoop : DO '{' Statement '}' WHILE '(' Condition ')' ';'
   ;
 
-
-
-
 %%
 
 void yyerror(char *line)

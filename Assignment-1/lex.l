@@ -15,7 +15,7 @@ whitespace [ \t\r]
 polarity [-+]?
 fraction  (\.{digit}+)?
 exponent ([Ee][+-]{digit}+)?
-number {polarity}?{digit}+{fraction}{exponent}
+number {digit}+{fraction}{exponent}
 id {letter}{alnumspecial}*
 %x state
 %%
