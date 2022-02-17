@@ -52,6 +52,8 @@ void return VOID;
 "*=" return OPERATOR_MULTIPLY_EQUAL;
 "/=" return OPERATOR_DIVIDE_EQUAL;
 "%=" return OPERATOR_MODULUS_EQUAL;
+"true" return BOOLEAN_TRUE;
+"false" return BOOLEAN_FALSE;
 
 \n { ++yylinenumber; };
 {whitespace} ;

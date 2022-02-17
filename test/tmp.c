@@ -1,9 +1,6 @@
 #include <stdio.h>
 void main()
 {
-    int i;
-    for (;; )
-    {
-        ;
-    }
+    int a = 1;
+    int i = -(a && a || (a && !true));
 }

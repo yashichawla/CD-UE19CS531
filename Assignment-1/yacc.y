@@ -35,6 +35,8 @@ extern char *yytext;
 %token OPERATOR_MULTIPLY_EQUAL
 %token OPERATOR_DIVIDE_EQUAL
 %token OPERATOR_MODULUS_EQUAL
+%token BOOLEAN_TRUE
+%token BOOLEAN_FALSE
 %token HEADER
 %token ID
 %token NUMBER
@@ -92,6 +94,8 @@ RelationalOperator : '<'
 
 E : E '+' T
   | E '-' T
+  | E OPERATOR_AND T
+  | E OPERATOR_OR T
   | T
   ;
 
@@ -105,10 +109,14 @@ F : F OPERATOR_DECREMENT
   | F OPERATOR_INCREMENT
   | OPERATOR_DECREMENT F
   | OPERATOR_INCREMENT F 
+  | '-' F
+  | '!' F
   | '(' Expression ')'
   | ID Indexing
   | NUMBER
   | STRING
+  | BOOLEAN_TRUE
+  | BOOLEAN_FALSE
   ;
 
 MainFunction : TYPE MAIN '(' EmptyListOfDeclarations ')' '{' Statement '}'
@@ -149,8 +157,10 @@ WhileLoopBody : '{' Statement '}'
   |
   ;
 
-ForLoopInitialisation : Assignment
-  | Declaration 
+ForLoopInitialisation : ForLoopInitialisation ',' Assignment
+  | ForLoopInitialisation ',' Declaration 
+  | Assignment
+  | Declaration
   |
   ;
 
@@ -158,7 +168,8 @@ ForLoopCondition : Condition
   |
   ;
 
-ForLoopUpdate : Expression
+ForLoopUpdate : ForLoopUpdate ',' Expression
+  | Expression
   |
   ;
 
@@ -171,6 +182,9 @@ ForLoopBody : '{' Statement '}'
 
 DoWhileLoop : DO '{' Statement '}' WHILE '(' Condition ')' ';'
   ;
+
+
+
 
 %%
 
