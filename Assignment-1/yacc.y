@@ -129,6 +129,7 @@ SingleStatement : Declaration ';'
   | IF '(' Condition ')' Statement ELSE Statement
   | WhileLoop
   | ForLoop
+  | DoWhileLoop
   | Expression ';'
   | error { yyerrok; yyclearin; }
   | ';' // how to handle null statements?
@@ -168,8 +169,8 @@ ForLoopBody : '{' Statement '}'
   |
   ;
 
-
-
+DoWhileLoop : DO '{' Statement '}' WHILE '(' Condition ')' ';'
+  ;
 
 %%
 
