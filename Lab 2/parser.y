@@ -11,6 +11,13 @@
 	void yyerror(char* s); // error handling function
 	int yylex(); // declare the function performing lexical analysis
 	extern int yylineno; // track the line number
+	char *yytext();
+	char* name;
+	int size;
+	int type;
+	char* val;
+	int line;
+	int scope;
 
 %}
 
@@ -43,20 +50,32 @@ VAR: T_ID '=' EXPR 	{
 					to be done in lab 3
 				*/
 			}
-     | T_ID 		{
+     | T_ID 	{
 				/*
-                   			check if symbol is in table
-                    			if it is then print error for redeclared variable
-                    			else make an entry and insert into the table
-                    			revert variables to default values:type
-                    		*/
+					check if symbol is in table
+					if it is then print error for redeclared variable
+					else make an entry and insert into the table
+					revert variables to default values:type
+				*/
+
+				if (check_symbol_table($1)) {
+					yyerror("Redeclared variable");
+				}
+				else {
+					name = $1;
+					val = "~";
+					line = yylineno;
+					scope = 1;
+					symbol* s = init_symbol(name, size, type, line, scope);
+					insert_into_table(s);
+				}
 			}	 
 
 //assign type here to be returned to the declaration grammar
-TYPE : T_INT 
-       | T_FLOAT 
-       | T_DOUBLE 
-       | T_CHAR 
+TYPE : T_INT {size=2;type=2;}
+       | T_FLOAT {size=4;type=3;}
+       | T_DOUBLE {size=4;type=4;}
+       | T_CHAR {size=4;type=1;}
        ;
     
 /* Grammar for assignment */   
@@ -134,8 +153,9 @@ void yyerror(char* s)
 int main(int argc, char* argv[])
 {
 	/* initialise table here */
+	t = init_table();
 	yyparse();
 	/* display final symbol table*/
+	display_symbol_table();
 	return 0;
-
 }
