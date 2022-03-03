@@ -66,16 +66,24 @@ VAR: T_ID '=' EXPR 	{
 					val = "~";
 					line = yylineno;
 					scope = 1;
+					// printf("%s %d %d %s\n", name, line, scope, val);
 					symbol* s = init_symbol(name, size, type, line, scope);
-					insert_into_table(s);
+					if (check_symbol_table(name))
+					{
+						insert_value_to_name(name, val, type);
+					}
+					else
+					{
+						insert_into_table(s);
+					}
 				}
 			}	 
 
 //assign type here to be returned to the declaration grammar
 TYPE : T_INT {size=2;type=2;}
        | T_FLOAT {size=4;type=3;}
-       | T_DOUBLE {size=4;type=4;}
-       | T_CHAR {size=4;type=1;}
+       | T_DOUBLE {size=8;type=4;}
+       | T_CHAR {size=1;type=1;}
        ;
     
 /* Grammar for assignment */   
