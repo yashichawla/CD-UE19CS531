@@ -15,7 +15,7 @@ table *init_table()
     return t;
 }
 
-symbol *init_symbol(char *name, int size, int type, int lineno, int scope) // allocates space for items in the list
+symbol *init_symbol(char *name, char*value, int size, int type, int lineno, int scope) // allocates space for items in the list
 {
     /*
         allocate space for entry pointer structure eg (s_name)* s
@@ -26,7 +26,7 @@ symbol *init_symbol(char *name, int size, int type, int lineno, int scope) // al
     s->name = name;
     s->size = size;
     s->type = type;
-    s->val = "~";
+    s->val = value;
     s->line = lineno;
     s->scope = scope;
     s->next = NULL;
@@ -131,3 +131,36 @@ void display_symbol_table()
         temp = temp->next;
     }
 }
+
+char* get_symbol_data_type(char* name)
+{
+    symbol* temp = t->head;
+    while (temp != NULL)
+    {
+        if (!strcmp(temp->name, name))
+        {
+            return temp->type;
+        }
+    }
+    return NULL;
+}
+
+char* check_literal(char* value)
+{
+    int length = strlen(value);
+    if ((value[0] == '\'' && value[length-1] == '\'') || (value[0] == '\"' && value[length-1] == '\"'))
+    {
+        return "literal";
+    }
+}
+
+char* evaluate_expression(char* operand_1, char* value_1, char* operand_2, char* value2)
+{
+    char* type_1 = get_symbol_data_type(operand_1);
+    char* type_2 = get_symbol_data_type(operand_2);
+    if (type_1 == NULL && type_2 == NULL) // both are either undeclared variables or literals
+    {
+
+    }
+}
+

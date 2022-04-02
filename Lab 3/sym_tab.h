@@ -21,7 +21,7 @@ typedef struct table // keeps track of the start of the list
 
 static table *t;
 table *init_table();
-symbol *init_symbol(char *, int, int, int, int);
+symbol *init_symbol(char *, char*, int, int, int, int);
 
 // table *allocate_space_for_table(); // allocate space for start of table
 // thus making a new symbol table
@@ -39,3 +39,5 @@ int check_symbol_table(char *);
 // checks symbol table whether the variable has been declared or not
 
 void display_symbol_table(); // displays symbol table
+
+char* get_symbol_data_type(char *);

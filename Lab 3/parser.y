@@ -46,9 +46,20 @@ LISTVAR : LISTVAR ',' VAR
 	  ;
 
 VAR: T_ID '=' EXPR 	{
-				/*
-					to be done in lab 3
-				*/
+					name = $1;
+					val = $3;
+					line = yylineno;
+					//scope = 1;
+					printf("%s %d %d %s\n", name, line, scope, val);
+					symbol* s = init_symbol(name, val, size, type, line, scope);
+					if (check_symbol_table(name))
+					{
+						insert_value_to_name(name, val, type);
+					}
+					else
+					{
+						insert_into_table(s);
+					}
 			}
      | T_ID 	{
 				/*
@@ -65,17 +76,18 @@ VAR: T_ID '=' EXPR 	{
 					name = $1;
 					val = "~";
 					line = yylineno;
-					scope = 1;
+					//scope = 1;
 					// printf("%s %d %d %s\n", name, line, scope, val);
-					symbol* s = init_symbol(name, size, type, line, scope);
-					if (check_symbol_table(name))
-					{
-						insert_value_to_name(name, val, type);
-					}
-					else
-					{
-						insert_into_table(s);
-					}
+					symbol* s = init_symbol(name, val, size, type, line, scope);
+					insert_into_table(s);
+					// if (check_symbol_table(name))
+					// {
+					// 	insert_value_to_name(name, val, type);
+					// }
+					// else
+					// {
+					// 	insert_into_table(s);
+					// }
 				}
 			}	 
 
@@ -88,9 +100,20 @@ TYPE : T_INT {size=2;type=2;}
     
 /* Grammar for assignment */   
 ASSGN : T_ID '=' EXPR 	{
-				/*
-					to be done in lab 3
-				*/
+					name = $1;
+					val = $3;
+					line = yylineno;
+					//scope = 1;
+					printf("%s %d %d %s\n", name, line, scope, val);
+					symbol* s = init_symbol(name, val, size, type, line, scope);
+					if (check_symbol_table(name))
+					{
+						insert_value_to_name(name, val, type);
+					}
+					else
+					{
+						insert_into_table(s);
+					}
 			}
 	;
 
@@ -99,8 +122,8 @@ EXPR : EXPR REL_OP E
        ;
 	   
 E : E '+' T
-    | E '-' T
-    | T 
+    | E '-' T 
+    | T { $$=$1 }
     ;
 	
 	
@@ -125,14 +148,14 @@ REL_OP :   T_LESSEREQ
 
 
 /* Grammar for main function */
-MAIN : TYPE T_MAIN '(' EMPTY_LISTVAR ')' '{' STMT '}';
+MAIN : TYPE T_MAIN '(' EMPTY_LISTVAR ')' { scope +=1; } '{' STMT '}';
 
 EMPTY_LISTVAR : LISTVAR
 		|	
 		;
 
 STMT : STMT_NO_BLOCK STMT
-       | BLOCK STMT
+       | BLOCK STMT 
        |
        ;
 
@@ -141,7 +164,7 @@ STMT_NO_BLOCK : DECLR ';'
        | ASSGN ';' 
        ;
 
-BLOCK : '{' STMT '}';
+BLOCK : { scope += 1; } '{'  STMT  '}' { scope -= 1; } ;
 
 COND : EXPR 
        | ASSGN
