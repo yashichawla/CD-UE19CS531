@@ -123,7 +123,7 @@ EXPR : EXPR REL_OP E
 	   
 E : E '+' T
     | E '-' T 
-    | T { $$=$1 }
+    | T { $$=$1 ;}
     ;
 	
 	
