@@ -40,4 +40,10 @@ int check_symbol_table(char *);
 
 void display_symbol_table(); // displays symbol table
 
-char* get_symbol_data_type(char *);
+int get_symbol_table_type(char*);
+
+char* get_symbol_table_value(char*);
+
+int get_variable_type(char*);
+
+char* type_to_string(int);

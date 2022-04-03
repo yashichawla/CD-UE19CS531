@@ -132,7 +132,7 @@ void display_symbol_table()
     }
 }
 
-char* get_symbol_data_type(char* name)
+int get_symbol_table_type(char* name)
 {
     symbol* temp = t->head;
     while (temp != NULL)
@@ -142,25 +142,56 @@ char* get_symbol_data_type(char* name)
             return temp->type;
         }
     }
+    return -1;
+}
+
+char* get_symbol_table_value(char* name)
+{
+    symbol* temp = t->head;
+    while (temp != NULL)
+    {
+        if (!strcmp(temp->name, name))
+        {
+            return temp->val;
+        }
+    }
     return NULL;
 }
 
-char* check_literal(char* value)
+int get_variable_type(char* value)
 {
-    int length = strlen(value);
-    if ((value[0] == '\'' && value[length-1] == '\'') || (value[0] == '\"' && value[length-1] == '\"'))
+    // 4.0 -> float -> 4.0000 -> int -> 4
+    // 4.6 -> float -> 4.6000 -> int -> 4
+    float f = atof(value);
+    int size = sizeof(f);
+    int i = atoi(value);
+    if (size == 1)
     {
-        return "literal";
+        // printf("Value = %s is character\n", value);
+        return 1; 
+    }
+    else
+    {
+        int i = atoi(value);
+        // printf("Value = %s %lf %i Is_Integer = %d\n", value, f, i, (((int)f) == f));
+        if (((int)f) == f)
+        { return 2; }
+        else
+        { return 3; }
     }
 }
 
-char* evaluate_expression(char* operand_1, char* value_1, char* operand_2, char* value2)
+char* type_to_string(int type)
 {
-    char* type_1 = get_symbol_data_type(operand_1);
-    char* type_2 = get_symbol_data_type(operand_2);
-    if (type_1 == NULL && type_2 == NULL) // both are either undeclared variables or literals
-    {
-
-    }
+    if (type == 1)
+        { return "char"; }
+    else if (type == 2)
+        { return "short int"; }
+    else if (type == 4)
+        { return "float"; }
+    else if (type == 8)
+        { return "double"; }
+    else
+        { return "error"; }
 }
 
