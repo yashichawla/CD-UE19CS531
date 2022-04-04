@@ -47,3 +47,5 @@ char* get_symbol_table_value(char*);
 int get_variable_type(char*);
 
 char* type_to_string(int);
+
+int check_decimal_value(char*);

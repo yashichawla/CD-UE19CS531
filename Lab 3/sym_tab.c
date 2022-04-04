@@ -141,6 +141,7 @@ int get_symbol_table_type(char* name)
         {
             return temp->type;
         }
+        temp = temp->next;
     }
     return -1;
 }
@@ -154,8 +155,23 @@ char* get_symbol_table_value(char* name)
         {
             return temp->val;
         }
+        temp = temp->next;
     }
     return NULL;
+}
+
+int check_decimal_value(char* value)
+{
+    int i = 0;
+    while (value[i] != '\0')
+    {
+        if (value[i] == '.')
+        {
+            return 1;
+        }
+        i++;
+    }
+    return 0;
 }
 
 int get_variable_type(char* value)
@@ -174,7 +190,7 @@ int get_variable_type(char* value)
     {
         int i = atoi(value);
         // printf("Value = %s %lf %i Is_Integer = %d\n", value, f, i, (((int)f) == f));
-        if (((int)f) == f)
+        if (((int)f) == f && check_decimal_value(value) == 0)
         { return 2; }
         else
         { return 3; }
@@ -187,9 +203,9 @@ char* type_to_string(int type)
         { return "char"; }
     else if (type == 2)
         { return "short int"; }
-    else if (type == 4)
+    else if (type == 3)
         { return "float"; }
-    else if (type == 8)
+    else if (type == 4)
         { return "double"; }
     else
         { return "error"; }

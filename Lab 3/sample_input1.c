@@ -11,8 +11,9 @@ int main()
 	// float z=10;
 	// a=;
 	a=8+"23";
-	a=a+b;
-	a = 2-3;
+	a=a+1;
+	a
 	int e=2+5;
 	float f=2.5+5.5;
+	float z = 2.0*10.0;
 }

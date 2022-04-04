@@ -27,6 +27,8 @@
 
 %start START
 
+%nonassoc T_IFX
+%nonassoc T_ELSE
 
 %%
 START : PROG { printf("Valid syntax\n"); YYACCEPT; }	
@@ -85,7 +87,7 @@ VAR: T_ID '=' EXPR 	{
 					// printf("%s %d %d %s\n", name, line, scope, val);
 					symbol* s = init_symbol(name, val, size, type, line, scope);
 					insert_into_table(s);
-					// type = -1;
+					type = -1;
 				}
 			}	 
 
@@ -107,8 +109,8 @@ ASSGN : T_ID '=' EXPR 	{
 					if (check_symbol_table(name))
 					{
 						insert_value_to_name(name, val, type);
-						// var_type = type;
-						// type = -1;
+						var_type = type;
+						type = -1;
 					}
 					else
 					{
@@ -119,9 +121,9 @@ ASSGN : T_ID '=' EXPR 	{
 	;
 
 EXPR : EXPR REL_OP E
-       | E { var_val = $1; }
-       ;
-	   
+	| E { var_val = $1; }
+	;
+	
 E : E '+' T
 		{
 			if (strcmp($1, "~") != 0 && strcmp($3, "~") != 0)
@@ -157,7 +159,7 @@ E : E '+' T
 		}
     | T 
 		{ 
-			if (var_type != type)
+			if (var_type != type && type != -1)
 			{
 				$$ = "~";
 			}
@@ -170,10 +172,41 @@ E : E '+' T
 	
 	
 T : T '*' F
-    | T '/' F
-    | F 
+	{
+		if (strcmp($1, "~") != 0 && strcmp($3, "~") != 0)
+		{
+			if (var_type == 2)
+				{ sprintf($$, "%d", (atoi($1) * atoi($3))); }
+			else if (var_type == 3)
+				{ sprintf($$, "%lf", (atof($1) * atof($3))); }
+			else
+			{
+				printf("Character type used in arithmetic\n");
+				yyerror($$);
+				$$ = "~";
+			}
+		}
+		else
+		{
+			$$ = "~";
+		}
+	}
+	| T '/' F 
+		{
+			if (var_type == 2)
+				{ sprintf($$, "%d", (atoi($1) / atoi($3))); }
+			else if (var_type == 3)
+				{ sprintf($$, "%lf", (atof($1) / atof($3))); }
+			else
+			{
+				printf("Character type used in arithmetic\n");
+				yyerror($$);
+				$$ = "~";
+			}
+		}
+	| F 
 		{ 
-			if (var_type != type)
+			if (var_type != type && type != -1)
 			{
 				printf("Type mismatch in arithmetic\n");
 				yyerror($$);
@@ -184,7 +217,7 @@ T : T '*' F
 				$$ = strdup($1);
 			}
 		}
-    ;
+	;
 
 F : '(' EXPR ')'
     | T_ID 
@@ -202,7 +235,7 @@ F : '(' EXPR ')'
 					{
 						$$ = strdup(var_val);
 						var_type = get_variable_type(var_val);
-						if (var_type != type && type != -1) // check comparison
+						if (var_type != type && type != -1)
 						{
 							printf("Error: %s not of type %s on line %d\n", name, type_to_string(type), yylineno);
 							yyerror($1);
@@ -219,6 +252,12 @@ F : '(' EXPR ')'
 		{
 			$$ = strdup($1);
 			var_type = get_variable_type($1);
+			// printf("%s %d %d\n", $1, var_type, type);
+			if (var_type != type && type != -1)
+			{
+				printf("Error: %s not of type %s on line %d\n", $1, type_to_string(type), yylineno);
+				yyerror($1);
+			}
 		}
 
     | T_STRLITERAL 
@@ -228,13 +267,12 @@ F : '(' EXPR ')'
 		}
     ;
 
-REL_OP : T_LESSEREQ
-	   | T_GREATEREQ
-	   | '<' 
-	   | '>' 
+REL_OP : T_GREATEREQ
+	   | '<'
+	   | '>'
 	   | T_EQCOMP
 	   | T_NOTEQUAL
-	   ;	
+	   ;
 
 
 /* Grammar for main function */
@@ -252,6 +290,8 @@ STMT : STMT_NO_BLOCK STMT
 
 STMT_NO_BLOCK : DECLR ';'
        | ASSGN ';' 
+	   | T_IF '(' COND ')' STMT %prec T_IFX
+	   | T_IF '(' COND ')' STMT T_ELSE STMT
        ;
 
 BLOCK : '{' { scope += 1; }  STMT  '}' { scope -= 1; } ;
@@ -262,7 +302,6 @@ COND : EXPR
 
 
 %%
-
 
 /* error handling function */
 void yyerror(char* s)
