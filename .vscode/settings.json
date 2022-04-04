@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.cpp": "cpp",
+        "*.rmd": "markdown",
+        "ctype.h": "c",
+        "stdio.h": "c"
+    }
+}

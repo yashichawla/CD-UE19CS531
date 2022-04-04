@@ -142,6 +142,7 @@ int retrieve_type(char* name){
 int type_check(char* name){
 	
 	float temp=atof(name);
+    
 	
 	if(sizeof(temp)==4)
 		{return(3);}
