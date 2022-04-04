@@ -87,7 +87,7 @@ VAR: T_ID '=' EXPR 	{
 					// printf("%s %d %d %s\n", name, line, scope, val);
 					symbol* s = init_symbol(name, val, size, type, line, scope);
 					insert_into_table(s);
-					type = -1;
+					// type = -1;
 				}
 			}	 
 
@@ -109,8 +109,8 @@ ASSGN : T_ID '=' EXPR 	{
 					if (check_symbol_table(name))
 					{
 						insert_value_to_name(name, val, type);
-						var_type = type;
-						type = -1;
+						// var_type = type;
+						// type = -1;
 					}
 					else
 					{
@@ -126,6 +126,7 @@ EXPR : EXPR REL_OP E
 	
 E : E '+' T
 		{
+			// printf("E+T %d %d\n", var_type, type);
 			if (strcmp($1, "~") != 0 && strcmp($3, "~") != 0)
 			{
 				if (var_type == 2)
@@ -159,7 +160,7 @@ E : E '+' T
 		}
     | T 
 		{ 
-			if (var_type != type && type != -1)
+			if (var_type != type) // && type != -1)
 			{
 				$$ = "~";
 			}
@@ -206,10 +207,10 @@ T : T '*' F
 		}
 	| F 
 		{ 
-			if (var_type != type && type != -1)
+			if (var_type != type) // && type != -1)
 			{
 				printf("Type mismatch in arithmetic\n");
-				yyerror($$);
+				yyerror($1);
 				$$ = "~";
 			}
 			else
@@ -252,18 +253,25 @@ F : '(' EXPR ')'
 		{
 			$$ = strdup($1);
 			var_type = get_variable_type($1);
-			// printf("%s %d %d\n", $1, var_type, type);
-			if (var_type != type && type != -1)
-			{
-				printf("Error: %s not of type %s on line %d\n", $1, type_to_string(type), yylineno);
-				yyerror($1);
-			}
+			// printf("T_NUM %s %d %d\n", $1, var_type, type);
+			// if (var_type != type) // && type != -1)
+			// {
+			// 	printf("Error: %s not of type %s on line %d\n", $1, type_to_string(type), yylineno);
+			// 	yyerror($1);
+			// }
 		}
 
     | T_STRLITERAL 
 		{
-			$$ = strdup($1);
+			
 			var_type = 1;
+			// printf("T_STR %s %d %d\n", $1, var_type, type);
+			// if (var_type != type) // && type != -1)
+			// {
+			// 	printf("Error: %s not of type %s on line %d\n", $1, type_to_string(type), yylineno);
+			// 	yyerror($1);
+			// 	$$ = strdup($1);
+			// }
 		}
     ;
 
