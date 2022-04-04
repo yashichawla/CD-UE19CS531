@@ -58,24 +58,18 @@ VAR: T_ID '=' EXPR 	{
 					revert variables to default values:type
 				*/
 
-				if (check_symbol_table($1)) {
-					yyerror("Redeclared variable");
+				if (check_symbol_table($1))
+				{
+					printf("Error: %s already declared on line %d\n", $1, yylineno);
+					yyerror($1);
 				}
 				else {
 					name = $1;
-					val = "~";
 					line = yylineno;
 					scope = 1;
 					// printf("%s %d %d %s\n", name, line, scope, val);
 					symbol* s = init_symbol(name, size, type, line, scope);
-					if (check_symbol_table(name))
-					{
-						insert_value_to_name(name, val, type);
-					}
-					else
-					{
-						insert_into_table(s);
-					}
+					insert_into_table(s);
 				}
 			}	 
 
