@@ -123,7 +123,7 @@ void display_symbol_table()
         with its struct variables
     */
 
-    printf("Name\tSize\tType\tLineno\tScope\tValue\n");
+    printf("Name\tSize\tType\tLineNo.\tScope\tValue\n");
     symbol *temp = t->head;
     while (temp != NULL)
     {
