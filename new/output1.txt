@@ -1,7 +1,0 @@
-Valid syntax
-
---------Symbol Table-------
-Name= a  Value= 1   Type= 2   Len= 2   Line= 3   Scope= 1
-Name= b  Value= 2   Type= 3   Len= 4   Line= 4   Scope= 1
-Name= c  Value= 3   Type= 4   Len= 8   Line= 5   Scope= 1
-Name= d  Value= 5   Type= 1   Len= 1   Line= 6   Scope= 1

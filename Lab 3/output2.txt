@@ -1,0 +1,5 @@
+Valid syntax
+Name	Size	Type	Lineno	Scope	Value
+x	4	3	3	1	4.5
+y	2	2	4	1	45.4
+z	2	2	13	2	35
