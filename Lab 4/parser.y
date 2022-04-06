@@ -27,8 +27,8 @@
 %%
 START : ASSGN	{ 
 					display_exp_tree($1);
-					printf("\nValid syntax\n");
-	 				YYACCEPT;										// If program fits the grammar, syntax is valid
+					// printf("\nValid syntax\n");
+	 				YYACCEPT;
 	 			}
 
 /* Grammar for assignment */

@@ -16,8 +16,12 @@ void display_exp_tree(expression_node* exp_node)
 {
 	if (exp_node != NULL)
 	{
-		printf("%s\n", exp_node->value);
-		display_exp_tree(exp_node->left);
-		display_exp_tree(exp_node->right);
+		if (!strcmp(exp_node-> value, "="))
+			display_exp_tree(exp_node->right);
+		else{
+			printf("%s\n", exp_node->value);
+			display_exp_tree(exp_node->left);
+			display_exp_tree(exp_node->right);
+		}
 	}
 }
