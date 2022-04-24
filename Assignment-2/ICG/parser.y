@@ -12,52 +12,76 @@
 
 	FILE* icg_quad_file;
 	int temp_no = 1;
+	int label_no = 1;
+	char *temp_label;
 %}
 
 
-%token T_ID T_NUM
+%token T_ID T_NUM IF ELSE
+%nonassoc IFX
+%nonassoc ELSE
 
 /* specify start symbol */
 %start START
 
 
 %%
-START : ASSGN	{ 
+
+START : STATEMENTS	{ 
 					printf("Valid syntax\n");
 	 				YYACCEPT;										// If program fits the grammar, syntax is valid
-	 			}
+				}
+;
+
+STATEMENTS :STMT STATEMENTS | STMT;
+
+STMT:IF '(' COND ')' { 
+		$$=new_label(); 
+		quad_code_gen($3,NULL,"if",$$);
+		temp_label=new_label();
+		quad_code_gen(NULL,NULL,"goto",temp_label);
+		quad_code_gen(NULL,NULL,"label",$$);
+		
+} '{'STATEMENTS'}' ELSE_BLOCK
+| ASSGN; 
+
+ELSE_BLOCK:{quad_code_gen(NULL,NULL,"goto","next"); quad_code_gen(NULL,NULL,"label",temp_label); } 
+			ELSE '{'STATEMENTS'}' {quad_code_gen(NULL,NULL,"label","next");} 
+			|{quad_code_gen(NULL,NULL,"label",temp_label);};
+
+
+COND : E RELOP E {
+	$$=new_temp(); quad_code_gen($1,$3,$2,$$);
+}
+;
+ 
+RELOP : '<' {$$="<";}
+	   | '>' {$$=">";}
+	   | '<' '=' {$$="<=";}
+	   | '>' '=' {$$=">=";}
+	   | '!' '=' {$$="!=";}
+	   | '=' '=' {$$="==";}
+;
 
 /* Grammar for assignment */
-ASSGN : T_ID '=' E	{ quad_code_gen($1, $3, "=", " ");	} //call quad_code_gen with appropriate parameters	
-	;
+ASSGN : T_ID '=' E ';'	{quad_code_gen($3,NULL,"=",$1);}
+;
 
 /* Expression Grammar */
-E : E '+' T { 
-		$$=new_temp();
-		quad_code_gen($$, $1, "+", $3);
-	}	
-	| E '-' T 	{ 
-		$$=new_temp();
-		quad_code_gen($$, $1, "-", $3);
-	}
+E : E '+' T 	{	$$=new_temp();quad_code_gen($1,$3,"+",$$); }
+	| E '-' T 	{	$$=new_temp();quad_code_gen($1,$3,"-",$$); }
 	| T
 	;
 	
 	
-T : T '*' F { 
-		$$=new_temp();
-		quad_code_gen($$, $1, "*", $3);
-	}	
-	| T '/' F { 
-		$$=new_temp();
-		quad_code_gen($$, $1, "/", $3);
-	}
+T : T '*' F 	{	$$=new_temp();quad_code_gen($1,$3,"*",$$);  }
+	| T '/' F 	{	$$=new_temp();quad_code_gen($1,$3,"/",$$);  }
 	| F
 	;
 
-F : '(' E ')' 	{ $$=$2; }
-	| T_ID 		{ $$=$1; }
-	| T_NUM 	{ $$=$1; }
+F : '(' E ')' 	{	$$=$2;	}
+	| T_ID
+	| T_NUM 
 	;
 
 %%
@@ -73,7 +97,7 @@ void yyerror(char* s)
 /* main function - calls the yyparse() function which will in turn drive yylex() as well */
 int main(int argc, char* argv[])
 {
-	icg_quad_file = fopen("icg_quad.txt", "w");
+	icg_quad_file = fopen("icg_quad.txt","w");
 	yyparse();
 	fclose(icg_quad_file);
 	return 0;
