@@ -8,5 +8,5 @@ rm lex.yy.c
 rm y.tab.c
 rm y.tab.h
 
-./a.out < test_input_1.c
-# ./a.out < test_input_2.c
+# ./a.out < test_input_1.c
+./a.out < test_input_2.c
